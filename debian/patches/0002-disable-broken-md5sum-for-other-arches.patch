@@ -1,0 +1,39 @@
+Description: Disable couple of tests on arches other than amd64 since there are minor differences between images across archs
+Author: Nilesh Patra <npatra974@gmail.com>
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=970612
+Forwarded: not-needed
+Last-Update: 2020-11-10
+--- a/context_test.go
++++ b/context_test.go
+@@ -7,6 +7,7 @@
+ 	"image/color"
+ 	"math/rand"
+ 	"testing"
++	"runtime"
+ )
+ 
+ var save bool
+@@ -99,7 +100,12 @@
+ 	checkHash(t, dc, "c52698000df96fabafe7863701afe922")
+ }
+ 
++
+ func TestQuadratic(t *testing.T) {
++	if runtime.GOARCH != "amd64" {
++		fmt.Println("Skipping tests")
++		t.Skip()
++	}
+ 	dc := NewContext(100, 100)
+ 	dc.SetRGB(0.25, 0.25, 0.25)
+ 	dc.Clear()
+@@ -185,6 +191,10 @@
+ }
+ 
+ func TestPushPop(t *testing.T) {
++	if runtime.GOARCH != "amd64" {
++		fmt.Println("Skipping tests")
++		t.Skip()
++	}
+ 	const S = 100
+ 	dc := NewContext(S, S)
+ 	dc.SetRGBA(0, 0, 0, 0.1)
